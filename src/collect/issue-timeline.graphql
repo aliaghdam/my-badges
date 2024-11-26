@@ -1,0 +1,34 @@
+query IssueTimelineQuery(
+  $owner: String!
+  $name: String!
+  $number: Int!
+  $num: Int = 100
+  $cursor: String
+) {
+  repository(owner: $owner, name: $name) {
+    issue(number: $number) {
+      timelineItems(first: $num, after: $cursor) {
+        totalCount
+        nodes {
+          __typename
+          ... on ClosedEvent {
+            createdAt
+            actor {
+              login
+            }
+          }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+      }
+    }
+  }
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+}
